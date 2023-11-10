@@ -44,6 +44,9 @@ jobs:
       - name: Clean Gradle
         run: ./gradlew clean
 
+      - name: Remove drawables
+        run: rm -rf android/app/src/main/res/drawable-*
+
       - name: Build APK
         run: ./gradlew assembleRelease
 
