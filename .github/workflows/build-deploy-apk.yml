@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./android
+        working-directory: android
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -24,14 +24,13 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           
-
       - name: Validate Gradle Wrapper
         run: ./gradlew wrapper --gradle-version=7.3
 
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12.10.0' # Use the specific Node.js version required by your React Native project
+          node-version: '12.10.0'
 
       - name: Install Yarn
         run: npm install -g yarn
