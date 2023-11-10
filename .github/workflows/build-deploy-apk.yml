@@ -27,6 +27,11 @@ jobs:
       - name: Check ls
         run: ls -la
 
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.10.0'
+
       - name: Install Yarn
         run: npm install -g yarn
 
@@ -35,11 +40,6 @@ jobs:
           
       - name: Validate Gradle Wrapper
         run: ./gradlew wrapper --gradle-version=6.4.1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12.10.0'
 
       - name: Build and Test
         run: ./gradlew clean build
