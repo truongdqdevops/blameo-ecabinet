@@ -1,89 +1,79 @@
-name: 'Build Android app'
+name: Build and Release React Native App
 
 on:
   push:
-    branches: ['main']
+    branches:
+      - main
   pull_request:
-    branches: ['main']
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./android
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Install Java
+      - name: Set Up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-          cache: 'gradle'
+          
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+      - name: Validate Gradle Wrapper
+        run: ./gradlew wrapper --gradle-version=7.3
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '12.10.0' # Use the specific Node.js version required by your React Native project
 
-      - name: Run Yarn Install
-        run: |
-          npm i -g corepack
-          yarn install
-      - name: Build application
-        run: |
-          ./gradlew assembleRelease
+      - name: Install Yarn
+        run: npm install -g yarn
 
-      - name: Upload application
-        uses: actions/upload-artifact@v3
+      - name: Install Node.js modules using Yarn
+        run: yarn install
+
+      - name: Build and Test
+        run: ./gradlew clean build
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: ${{github.workspace}}/android/app/release/app-release.apk
-          retention-days: 30
-          if-no-files-found: error
+          path: app/build/outputs/apk/release/app-release.apk
 
-  release-project:
-    name: Release project
+  release:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Download APK Artifact
+        uses: actions/download-artifact@v2
         with:
           name: app-release
-      - name: Achive artifact
-        uses: thedoctor0/zip-release@master
-        with:
-          filename: app-release.zip
 
-      - name: Create github release
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
+          tag_name: v${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
           body: |
             Release ${{ github.ref }}
           draft: false
           prerelease: false
 
-      - name: Upload release asset
-        id: upload-release-asset
+      - name: Upload Release Asset
+        id: upload_release_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app-release.zip
+          asset_path: ${{ github.workspace }}/app-release.zip
           asset_name: app-release.zip
           asset_content_type: application/zip
