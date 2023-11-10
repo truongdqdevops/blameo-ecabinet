@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -25,7 +28,7 @@ jobs:
         run: ls -la
           
       - name: Validate Gradle Wrapper
-        run: cd android && ./gradlew wrapper --gradle-version=6.4.1
+        run: ./gradlew wrapper --gradle-version=6.4.1
 
       - name: Install Node.js
         uses: actions/setup-node@v2

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "333189008736",
+    "project_id": "ecabinet-vpdt",
+    "storage_bucket": "ecabinet-vpdt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333189008736:android:59543f166f1c663526a205",
+        "android_client_info": {
+          "package_name": "com.ecabinet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333189008736-3kc03s1r6ajfrmbpuh17iibm2tapdtcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecabinet",
+            "certificate_hash": "3e3a8d306fa56a4aefe5b3a54a33633ec3f190c6"
+          }
+        },
+        {
+          "client_id": "333189008736-2mir7nframkm4g12su2a7kdijfernt4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXNMsjWQfUv-u2C82XSoSITvo9Lxd05pI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333189008736-2mir7nframkm4g12su2a7kdijfernt4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
