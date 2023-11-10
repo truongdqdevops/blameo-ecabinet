@@ -41,11 +41,17 @@ jobs:
       - name: Validate Gradle Wrapper
         run: ./gradlew wrapper --gradle-version=6.4.1
 
+      - name: Remove Start remove [index.android.bundle]
+        run: rm app/src/main/assets/index.android.bundle
+      
+      - name: Start bundle assets
+        run: npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+      
+      - name: Start remove res/drawable*
+        run: rm -rf android/app/src/main/res/drawable-hdpi android/app/src/main/res/drawable-mdpi android/app/src/main/res/drawable-xhdpi android/app/src/main/res/drawable-xxhdpi android/app/src/main/res/drawable-xxxhdpi android/app/src/main/res/raw || true
+
       - name: Clean Gradle
         run: ./gradlew clean
-
-      - name: Remove drawables
-        run: rm -rf android/app/src/main/res/drawable-*
 
       - name: Build APK
         run: ./gradlew assembleRelease
