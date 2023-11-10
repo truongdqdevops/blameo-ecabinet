@@ -53,11 +53,14 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: check build folder
+        run: ls -la app/build/outputs/apk
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: ${{github.workspace}}/android/app/release/app-release.apk
+          path: ${{github.workspace}}/app/build/outputs/apk/release/app-release.apk
           retention-days: 30
           if-no-files-found: error
 
