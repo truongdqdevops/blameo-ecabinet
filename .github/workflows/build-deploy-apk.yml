@@ -54,7 +54,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: check build folder
-        run: ls -la app/build/outputs/apk
+        run: ls -la app/build/outputs/apk/release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v2
