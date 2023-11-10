@@ -36,49 +36,61 @@ jobs:
         run: npm install -g yarn
 
       - name: Install Node.js modules using Yarn
-        run: yarn install
+        run: |
+          npm i -g corepack
+          yarn install
           
       - name: Validate Gradle Wrapper
         run: ./gradlew wrapper --gradle-version=6.4.1
 
-      - name: Build and Test
-        run: ./gradlew clean build
+      - name: Clean Gradle
+        run: ./gradlew clean
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: app/build/outputs/apk/release/app-release.apk
+          path: ${{github.workspace}}/android/app/release/app-release.apk
+          retention-days: 30
+          if-no-files-found: error
 
-  release:
+  release-project:
+    name: Release project
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download APK Artifact
-        uses: actions/download-artifact@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v3
         with:
           name: app-release
+      - name: Achive artifact
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: app-release.zip
 
-      - name: Create GitHub Release
+      - name: Create github release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
+          tag_name: ${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
           body: |
             Release ${{ github.ref }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        id: upload_release_asset
+      - name: Upload release asset
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/app-release.zip
+          asset_path: ./app-release.zip
           asset_name: app-release.zip
           asset_content_type: application/zip
