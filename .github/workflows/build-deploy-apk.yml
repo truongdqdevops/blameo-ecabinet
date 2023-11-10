@@ -45,7 +45,7 @@ jobs:
         run: rm app/src/main/assets/index.android.bundle
             
       - name: Start remove res/drawable*
-        run: rm -rf android/app/src/main/res/drawable-hdpi android/app/src/main/res/drawable-mdpi android/app/src/main/res/drawable-xhdpi android/app/src/main/res/drawable-xxhdpi android/app/src/main/res/drawable-xxxhdpi android/app/src/main/res/raw || true
+        run: rm -rf app/src/main/res/drawable-hdpi app/src/main/res/drawable-mdpi app/src/main/res/drawable-xhdpi app/src/main/res/drawable-xxhdpi app/src/main/res/drawable-xxxhdpi app/src/main/res/raw || true
 
       - name: Clean Gradle
         run: ./gradlew clean
