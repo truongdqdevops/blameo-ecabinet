@@ -10,8 +10,7 @@
     "ios": "npx react-native run-ios --simulator=\"iPhone 12\"",
     "jetify": "npx jetify",
     "bundle:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
-    "build:apk": "cd android && ./gradlew assembleRelease",
-    "postinstall": "npm run bundle:ios"
+    "build:apk": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@dudigital/react-native-zoomable-view": "^1.0.16",
