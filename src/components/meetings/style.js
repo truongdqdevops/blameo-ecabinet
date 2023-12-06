@@ -551,4 +551,28 @@ export default StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  highlightBlueTxt: {
+    color: '#3127F1',
+    fontSize: 14,
+    fontWeight: 'bold'
+  },
+  btnAttachVOfficeFile: {
+    width: 130,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#2059EE',
+    display: 'flex',
+    height: 36,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  btnAttachVOfficeFileText: {
+    fontWeight: "600",
+    fontSize: 15,
+    textAlign: "center",
+    color: "#2059EE",
+    marginLeft: 5
+  }
 });

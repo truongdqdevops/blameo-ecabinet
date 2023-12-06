@@ -19,9 +19,9 @@ class ModalAttachFile extends Component {
 
     renderHeaderTable() {
         const itemData = [
-            <Text style={styles.headerTableText}>STT</Text>,
-            <Text style={[styles.headerTableText, { textAlign: 'left', paddingLeft: 10 }]}>Tài liệu</Text>,
-            <Text style={[styles.headerTableText, { textAlign: 'left', paddingLeft: 10 }]}>Mô tả tài liệu</Text>,
+            <Text style={styles.headerTableText}>{this.props?.firstHeader ?? "STT"}</Text>,
+            <Text style={[styles.headerTableText, { textAlign: 'left', paddingLeft: 10 }]}>{this.props?.secondHeader ?? "Tài liệu"}</Text>,
+            <Text style={[styles.headerTableText, { textAlign: 'left', paddingLeft: 10 }]}>{this.props?.threeHeader ?? "Mô tả tài liệu"}</Text>,
         ];
         this.setState({
             tableHead: itemData

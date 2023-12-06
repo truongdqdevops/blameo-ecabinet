@@ -71,7 +71,9 @@ import {
   removeStatement,
   updateConferenceParticipant,
   updateConferenceParticipantAndDelegation,
-  updateParticipant
+  updateParticipant,
+  getAttachConclusionFile,
+  getVOfficeFiles
 } from "../../redux/actions/meetings.action";
 import { updateConferenceWS } from "../../redux/actions/websocket.action";
 import {
@@ -116,6 +118,10 @@ import Confirm from "../../assets/components/confirm";
 import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 import HTML from "react-native-render-html";
 import { Message } from "../../assets/utils/message";
+import ModalAttachFile from "../feedback/feedback-modal/attach-file";
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
+import { hostURL } from "../../services/service";
 
 require("moment/locale/vi");
 const srcImg = require("../../assets/images/no-document.png");
@@ -174,6 +180,10 @@ class MeetingSchedule extends Component {
       sendFeedBackValue: "",
       isVisibleErrAnswer: false,
       selectedAttachFileNghiQuyet: null,
+      isVisibleAttach1: false,
+      isVisibleShowFiles1: false,
+      isVisibleShowFiles: false,
+      attachFileId: 0,
       isMemberInvited: false,
       mess: "",
       isVisibleRefuse: false,
@@ -564,6 +574,12 @@ class MeetingSchedule extends Component {
       } = firstMeeting;
       await this.props.getMeetingById({ id: conferenceId });
       await this.props.getListGopY({ conferenceId: conferenceId });
+      await this.props.getVOfficeFiles({ conferenceId });
+      await this.props.getAttachConclusionFile({
+        type: 'FILE_NGHI_QUYET',
+        objectId: this.state.selectedMeeting.conferenceId,
+        objectType: 'CONFERENCE'
+      })
 
       const selectedMeeting = {
         ...firstMeeting,
@@ -733,7 +749,13 @@ class MeetingSchedule extends Component {
         }
 
         await this.props.getMeetingById({ id: reqConferenceId });
-        await this.props.getListGopY({ conferenceId: conferenceId });
+        await this.props.getListGopY({ conferenceId: reqConferenceId });
+        await this.props.getVOfficeFiles({ conferenceId: reqConferenceId });
+        await this.props.getAttachConclusionFile({
+          type: 'FILE_NGHI_QUYET',
+          objectId: reqConferenceId,
+          objectType: 'CONFERENCE'
+        })
 
         const { status } = this.props.selectedMeeting;
 
@@ -948,6 +970,12 @@ class MeetingSchedule extends Component {
         await Promise.all([
           await this.props.getMeetingById({ id: conferenceId }),
           await this.props.getListGopY({ conferenceId: conferenceId }),
+          await this.props.getVOfficeFiles({ conferenceId }),
+          await this.props.getAttachConclusionFile({
+            type: 'FILE_NGHI_QUYET',
+            objectId: conferenceId,
+            objectType: 'CONFERENCE'
+          }),
           !isCVVP && this.props.getConferenceParticipant(bodyReqConferenceId),
           this.props.getConferenceFile(bodyReqConferenceId)
         ]);
@@ -1147,7 +1175,13 @@ class MeetingSchedule extends Component {
       this.props.getListMeeting(newBodyReq),
       this.props.getListCategory(),
       this.props.getMeetingById({ id: conferenceId }),
-      this.props.getListGopY({ conferenceId: conferenceId })
+      this.props.getListGopY({ conferenceId: conferenceId }),
+      this.props.getVOfficeFiles({ conferenceId }),
+      this.props.getAttachConclusionFile({
+        type: 'FILE_NGHI_QUYET',
+        objectId: conferenceId,
+        objectType: 'CONFERENCE'
+      }),
     ]);
     const ind = this.props.listMeeting.findIndex(
       element => conferenceId === element.conferenceId
@@ -2909,6 +2943,107 @@ class MeetingSchedule extends Component {
     ]);
   };
 
+  checkToOpenFileAttachFileId = (attachmentId, name, isPdf) => {
+    if (isPdf) {
+      this.setState({ isVisibleShowFiles: true, attachFileId: attachmentId });
+    } else {
+      this.handleViewFile(attachmentId, name);
+    }
+  };
+
+  getUrlDownload = id => {
+    const { sessionId = "" } = this.props;
+    const remoteUri = `${hostURL()}/Attachment/get?id=${id}&session=${sessionId}`;
+    return remoteUri;
+  };
+
+  handleViewFile = async (id, name) => {
+    const url = this.getUrlDownload(id);
+    let localFile = `${RNFS.DocumentDirectoryPath}/temporaryfile`;
+    if (name.indexOf(".docx") > -1) localFile = `${localFile}.docx`;
+    else if (name.indexOf(".doc") > -1) localFile = `${localFile}.doc`;
+    else if (name.indexOf(".xlsx") > -1) localFile = `${localFile}.xlsx`;
+    else if (name.indexOf(".xls") > -1) localFile = `${localFile}.xls`;
+    else if (name.indexOf(".pptx") > -1) localFile = `${localFile}.pptx`;
+    else if (name.indexOf(".ppt") > -1) localFile = `${localFile}.ppt`;
+    else if (name.indexOf(".txt") > -1) localFile = `${localFile}.txt`;
+
+    const options = {
+      fromUrl: url,
+      toFile: localFile
+    };
+    RNFS.downloadFile(options)
+      .promise.then(() => FileViewer.open(localFile))
+      .then(() => {
+        // success
+      })
+      .catch(error => {
+        Alert.alert(
+          "Thông báo",
+          "Thiết bị chưa được cài ứng dụng đọc file, vui lòng cài đặt và thử lại!"
+        );
+        console.log(error);
+      });
+  };
+
+  renderDataTable2 = () => {
+    const { vOfficeFiles = [] } = this.props;
+    const tableData2 = [];
+
+    if (vOfficeFiles.length === 0) {
+      tableData2.push([
+        <Text
+          key={"table2hasnoitem"}
+          style={{ textAlign: "center", color: "grey" }}
+        >
+          Không có bản ghi
+        </Text>
+      ]);
+    } else {
+      vOfficeFiles.forEach((element, index) => {
+        const stt = index + 1;
+        const { fileName = "", title = "", attachmentId = "" } = element;
+        const isPDF = fileName.slice(fileName.length - 3) === "pdf";
+        const itemData = [
+          <Text style={{ textAlign: "center" }}>{stt}</Text>,
+          <Text
+            style={{ textAlign: "left", color: "#3939FF", paddingLeft: 10 }}
+            onPress={() =>
+              this.checkToOpenFileAttachFileId(attachmentId, fileName, isPDF)
+            }
+          >
+            {fileName}
+          </Text>,
+          <Text style={{ textAlign: "left", paddingLeft: 10, paddingRight: 5 }}>
+            {title}
+          </Text>
+        ];
+        const rowData = (
+          <Row
+            key={index.toString()}
+            flexArr={[1, 5, 4]}
+            data={itemData}
+            style={styles.contentTable}
+          />
+        );
+        tableData2.push(rowData);
+      });
+    }
+
+    this.setState({
+      tableData2
+    });
+  };
+
+  handleViewFileMeetConClusion = async ()=> {
+    const data = this.props.conclusion[0];
+    if(data){
+      const { attachmentId, name } = data;
+      const isPDF = name.slice(name.length - 3) === "pdf";
+      this.checkToOpenFileAttachFileId(attachmentId, name, isPDF);
+    }
+  }
+
   render() {
     const {
       permission = {},
@@ -2993,9 +3128,12 @@ class MeetingSchedule extends Component {
       tableFeedBackHead,
       generalInfo = { button: "plus-circle-outline" },
       isSetPermission = false,
-      isMemberInvited = false
+      isMemberInvited = false,
+      isVisibleAttach1,
+      isVisibleShowFiles1,
+      tableData2,
+      attachFileId
     } = this.state;
-    const tableData2 = [];
     const {
       chairmanName = "",
       location = "",
@@ -3805,7 +3943,7 @@ class MeetingSchedule extends Component {
                   )}
 
                   {/*Chuong trinh hop */}
-                  <View style={{ marginVertical: 7 }}>
+                  <View style={{ marginTop: 7 }}>
                     <Collapse
                       onToggle={isCollapsed =>
                         this.handleChangeButton(isCollapsed, 3)
@@ -3895,6 +4033,43 @@ class MeetingSchedule extends Component {
                         )}
                       </CollapseBody>
                     </Collapse>
+                  
+                  
+                  <View style={{ marginTop: 18, paddingHorizontal: 15 }}>
+                    <Text
+                      style={styles.labelConferenceStatus}
+                      onPress={() => {
+                        if(this.props.vOfficeFiles.length > 0){
+                          this.setState({ isVisibleAttach1: true });
+                          this.renderDataTable2();
+                        }
+                      }}
+                    >
+                      {"Tài liệu chung đồng bộ từ Voffice"} ({this.props.vOfficeFiles.length})
+                    </Text>
+                    {this.props.vOfficeFiles.length > 0 ? <ModalAttachFile
+                      width={width}
+                      height={height}
+                      isVisible={isVisibleAttach1}
+                      toggleModal={() =>
+                        this.setState({ isVisibleAttach1: false })
+                      }
+                      tableData={tableData2}
+                      headName={"Danh sách tài liệu"}
+                      threeHeader="Trích yếu"
+                      isVisibleShowFiles={
+                        attachFileId !== 0 &&
+                        isVisibleShowFiles1 &&
+                        isVisibleAttach1
+                      }
+                      attachFileId={attachFileId}
+                      toggleShowFiles={() =>
+                        this.setState({ attachFileId: 0 })
+                      }
+                    /> : <Text style={{ marginTop: 5, fontWeight: "500" }}>Không có</Text>
+                    }
+                  </View>
+
                   </View>
                   {/* BANG NOI DUNG */}
                   <View style={styles.containerTableContent}>
@@ -3956,6 +4131,30 @@ class MeetingSchedule extends Component {
                         </Text>
                       )}
                     </View> */}
+                    <View>
+                      <Text style={styles.labelConferenceStatus}>
+                        Thông báo kết luận họp ({this.props.conclusion.length})
+                      </Text>
+                      {this.props.conclusion.length > 0 ? (
+                          <View style={[styles.flexRowAlignCenter, { paddingRight: 10 }]}>
+                            <IconA name={"filetext1"} size={18} color={"black"} />
+                            <Text
+                              style={{
+                                color: "#316ec4",
+                                fontWeight: "bold",
+                                fontSize: 13,
+                                paddingLeft: 5,
+                                paddingVertical: 3,
+                              }}
+                              onPress={this.handleViewFileMeetConClusion}
+                            >
+                              {this.props.conclusion[0]?.name ?? ''}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text style={{ marginTop: 5, fontWeight: "500", marginBottom: 10 }}>Không có</Text>
+                      )}
+                    </View>
                     {(isCVVP ||
                       (permission.approval &&
                         status >= CONFERENCE_STATUS.DA_GUI &&
@@ -4747,6 +4946,9 @@ const mapStateToProps = (state) => {
         userInfo: state.AuthenReducer.userInfo,
         wsConferenceId: state.WSReducer.wsConferenceId,
         listNotebookByUserId: state.MeetingReducer.listNotebookByUserId,
+        vOfficeFiles: state.MeetingReducer.vOfficeFiles,
+        conclusion: state.MeetingReducer.conclusion,
+        sessionId: state.AuthenReducer.sessionId,
     };
 };
 
@@ -4787,4 +4989,6 @@ export default connect(mapStateToProps, {
     deleteGopY,
     editGopY,
     createGopY,
+    getVOfficeFiles,
+    getAttachConclusionFile
 })(MeetingSchedule);

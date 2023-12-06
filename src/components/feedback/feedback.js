@@ -2594,8 +2594,6 @@ class Feedbacks extends Component {
     } = selectedFeedback;
     const { name: voteTypeName = "" } = voteType;
 
-    console.log('====render().custom', custom);
-
     return (
       <View style={styles.container}>
         <MHeader
