@@ -4131,7 +4131,7 @@ class MeetingSchedule extends Component {
                         </Text>
                       )}
                     </View> */}
-                    <View>
+                    {/* <View>
                       <Text style={styles.labelConferenceStatus}>
                         Thông báo kết luận họp ({this.props.conclusion.length})
                       </Text>
@@ -4154,7 +4154,7 @@ class MeetingSchedule extends Component {
                         ) : (
                           <Text style={{ marginTop: 5, fontWeight: "500", marginBottom: 10 }}>Không có</Text>
                       )}
-                    </View>
+                    </View> */}
                     {(isCVVP ||
                       (permission.approval &&
                         status >= CONFERENCE_STATUS.DA_GUI &&

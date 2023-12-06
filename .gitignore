@@ -122,3 +122,5 @@ ios/build
 ios/pod/*
 
 ios/.DS_Store
+
+android/.idea
