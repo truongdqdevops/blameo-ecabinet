@@ -1,4 +1,4 @@
-import {ACTION_TYPES} from '../types';
+import { ACTION_TYPES } from "../types";
 
 const initialState = {
   chosenMeeting: 0,
@@ -39,10 +39,27 @@ const initialState = {
   listCategory: [],
   listGopY: [],
   totalListGopY: 0,
+  vOfficeFiles: [],
+  conclusion: []
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    // @AUTHOR: DQT
+    case ACTION_TYPES.GET_FILES_V_OFFICES: {
+      const { data } = action;
+      return {
+        ...state,
+        vOfficeFiles: data,
+      };
+    }
+    case ACTION_TYPES.GET_ATTACH_FILE_CONCLUSION: {
+      const { data } = action;
+      return {
+        ...state,
+        conclusion: data,
+      };
+    }
     case ACTION_TYPES.CHOOSE_MEETING: {
       const {chosenMeeting = 0, chosenContent = 0} = action;
       return {

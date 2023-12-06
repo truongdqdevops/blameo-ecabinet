@@ -379,6 +379,19 @@ export async function commentResolutionService(body) {
   return res;
 }
 
+
+/**
+ * @AUTHOR: DQT
+ * @method POST
+ * @body { conferenceId: number }
+ * */
+export async function getVOfficeFilesService(body) {
+  const apiUrl = `${hostURL()}/Conference/getFileFromVofficeByConferenceId`;
+  console.log("getVOfficeFilesService.request", body);
+  const res = await request(apiUrl, "POST", httpOptions, body);
+  console.log("getVOfficeFilesService.response", JSON.parse(res.data));
+  return JSON.parse(res.data);
+}
 // #endregion
 
 export async function getAttachFileService(body) {
