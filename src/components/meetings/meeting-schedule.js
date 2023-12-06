@@ -3735,12 +3735,46 @@ class MeetingSchedule extends Component {
                     </View>
                   </View>
 
+                  <View style={{ padding: 10, marginBottom: fileNghiQuyet !== null ? -10 : -5 }}>
+                    <Text
+                      style={styles.labelConferenceStatus}
+                      onPress={() => {
+                        if(this.props.vOfficeFiles.length > 0){
+                          this.setState({ isVisibleAttach1: true });
+                          this.renderDataTable2();
+                        }
+                      }}
+                    >
+                      {"Tài liệu chung đồng bộ từ QLVB"} ({this.props.vOfficeFiles.length})
+                    </Text>
+                    <ModalAttachFile
+                      width={width}
+                      height={height}
+                      isVisible={isVisibleAttach1}
+                      toggleModal={() =>
+                        this.setState({ isVisibleAttach1: false })
+                      }
+                      tableData={tableData2}
+                      headName={"Danh sách tài liệu"}
+                      threeHeader="Trích yếu"
+                      isVisibleShowFiles={
+                        attachFileId !== 0 &&
+                        isVisibleShowFiles1 &&
+                        isVisibleAttach1
+                      }
+                      attachFileId={attachFileId}
+                      toggleShowFiles={() =>
+                        this.setState({ attachFileId: 0 })
+                      }
+                    />
+                  </View>
+
                   {/* KET LUAN NGHI QUYET */}
                   {fileNghiQuyet !== null && (
                     <View style={{ padding: 10 }}>
                       <View>
                         <Text style={styles.labelConferenceStatus}>
-                          Kết luận/ Nghị quyết
+                          Kết luận/ Nghị quyết xxx
                         </Text>
                       </View>
                       <View style={styles.userInfer}>
@@ -4033,42 +4067,6 @@ class MeetingSchedule extends Component {
                         )}
                       </CollapseBody>
                     </Collapse>
-                  
-                  
-                  <View style={{ marginTop: 18, paddingHorizontal: 15 }}>
-                    <Text
-                      style={styles.labelConferenceStatus}
-                      onPress={() => {
-                        if(this.props.vOfficeFiles.length > 0){
-                          this.setState({ isVisibleAttach1: true });
-                          this.renderDataTable2();
-                        }
-                      }}
-                    >
-                      {"Tài liệu chung đồng bộ từ Voffice"} ({this.props.vOfficeFiles.length})
-                    </Text>
-                    {this.props.vOfficeFiles.length > 0 ? <ModalAttachFile
-                      width={width}
-                      height={height}
-                      isVisible={isVisibleAttach1}
-                      toggleModal={() =>
-                        this.setState({ isVisibleAttach1: false })
-                      }
-                      tableData={tableData2}
-                      headName={"Danh sách tài liệu"}
-                      threeHeader="Trích yếu"
-                      isVisibleShowFiles={
-                        attachFileId !== 0 &&
-                        isVisibleShowFiles1 &&
-                        isVisibleAttach1
-                      }
-                      attachFileId={attachFileId}
-                      toggleShowFiles={() =>
-                        this.setState({ attachFileId: 0 })
-                      }
-                    /> : <Text style={{ marginTop: 5, fontWeight: "500" }}>Không có</Text>
-                    }
-                  </View>
 
                   </View>
                   {/* BANG NOI DUNG */}
