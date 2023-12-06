@@ -2945,7 +2945,7 @@ class MeetingSchedule extends Component {
 
   checkToOpenFileAttachFileId = (attachmentId, name, isPdf) => {
     if (isPdf) {
-      this.setState({ isVisibleShowFiles: true, attachFileId: attachmentId });
+      this.setState({ isVisibleShowFiles1: true, attachFileId: attachmentId });
     } else {
       this.handleViewFile(attachmentId, name);
     }
@@ -3774,7 +3774,7 @@ class MeetingSchedule extends Component {
                     <View style={{ padding: 10 }}>
                       <View>
                         <Text style={styles.labelConferenceStatus}>
-                          Kết luận/ Nghị quyết xxx
+                          Kết luận/ Nghị quyết
                         </Text>
                       </View>
                       <View style={styles.userInfer}>
