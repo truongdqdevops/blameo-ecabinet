@@ -3737,12 +3737,10 @@ class MeetingSchedule extends Component {
 
                   <View style={{ padding: 10, marginBottom: fileNghiQuyet !== null ? -10 : -5 }}>
                     <Text
-                      style={styles.labelConferenceStatus}
+                      style={[styles.labelConferenceStatus, { color: "#2059EE" }]}
                       onPress={() => {
-                        if(this.props.vOfficeFiles.length > 0){
-                          this.setState({ isVisibleAttach1: true });
-                          this.renderDataTable2();
-                        }
+                        this.setState({ isVisibleAttach1: true });
+                        this.renderDataTable2();
                       }}
                     >
                       {"Tài liệu chung đồng bộ từ QLVB"} ({this.props.vOfficeFiles.length})
