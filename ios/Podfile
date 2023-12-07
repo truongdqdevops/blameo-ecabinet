@@ -83,6 +83,8 @@ pod 'RNFileViewer', :path => '../node_modules/react-native-file-viewer'
     ## Fix for XCode 12.5 beta
     find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
     "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
+    find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
+        "RCTBridgeModuleNameForClass(module))", "RCTBridgeModuleNameForClass(Class(module)))")
   end
 
 

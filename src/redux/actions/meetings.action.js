@@ -965,6 +965,8 @@ export const getVOfficeFiles = (body) => async (dispatch) => {
     const res = await getVOfficeFilesService(body);
     dispatch(setVOfficeFilesAction(res));
   } catch (error) {
+    dispatch(setVOfficeFilesAction([]));
+    console.log('getVOfficeFiles.error',error);
     dispatch(getErrors(error));
   }
 };
