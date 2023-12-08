@@ -228,13 +228,14 @@ class ShowFiles extends Component {
     };
     downloadFile = async (url, name) => {
         const { dirs } = RNFetchBlob.fs;
+        const isPdf  = name.indexOf(".pdf") > 0;
         try {
             if (Platform.OS === 'android') {
                 const granted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
                 );
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    RNFetchBlob.config({
+                    const configs = {
                         fileCache: true,
                         addAndroidDownloads: {
                             useDownloadManager: true,
@@ -243,7 +244,13 @@ class ShowFiles extends Component {
                             title: name,
                             path: `${dirs.DownloadDir}/${name}`,
                         },
-                    })
+                    }
+
+                    if(isPdf){
+                        configs.addAndroidDownloads.mime = 'application/pdf'
+                    }
+
+                    RNFetchBlob.config(configs)
                         .fetch('GET', url, {})
                         .then((res) => {
                             console.log('The file saved to ', res.path());

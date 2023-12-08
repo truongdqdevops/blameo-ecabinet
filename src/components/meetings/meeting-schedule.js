@@ -182,6 +182,7 @@ class MeetingSchedule extends Component {
       selectedAttachFileNghiQuyet: null,
       isVisibleAttach1: false,
       isVisibleShowFiles1: false,
+      qlvbFileName: '',
       isVisibleShowFiles: false,
       attachFileId: 0,
       isMemberInvited: false,
@@ -2945,7 +2946,7 @@ class MeetingSchedule extends Component {
 
   checkToOpenFileAttachFileId = (attachmentId, name, isPdf) => {
     if (isPdf) {
-      this.setState({ isVisibleShowFiles1: true, attachFileId: attachmentId });
+      this.setState({ isVisibleShowFiles1: true, attachFileId: attachmentId, qlvbFileName: name });
     } else {
       this.handleViewFile(attachmentId, name);
     }
@@ -3131,6 +3132,7 @@ class MeetingSchedule extends Component {
       isMemberInvited = false,
       isVisibleAttach1,
       isVisibleShowFiles1,
+      qlvbFileName,
       tableData2,
       attachFileId
     } = this.state;
@@ -3760,6 +3762,7 @@ class MeetingSchedule extends Component {
                         isVisibleShowFiles1 &&
                         isVisibleAttach1
                       }
+                      fileName={qlvbFileName}
                       attachFileId={attachFileId}
                       toggleShowFiles={() =>
                         this.setState({ attachFileId: 0 })

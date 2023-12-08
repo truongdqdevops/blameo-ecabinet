@@ -29,7 +29,7 @@ class ModalAttachFile extends Component {
     }
 
     render() {
-        const { width, isVisible = false, toggleModal, height, headName, isVisibleShowFiles, attachFileId, toggleShowFiles } = this.props;
+        const { width, isVisible = false, toggleModal, height, headName, isVisibleShowFiles, attachFileId, toggleShowFiles, fileName } = this.props;
         const {
             tableHead = [],
         } = this.state;
@@ -76,6 +76,7 @@ class ModalAttachFile extends Component {
                             title={'Nội dung tài liệu'}
                             fileId={attachFileId || 0}
                             toggleModal={toggleShowFiles}
+                            name={fileName}
                         />
                     )}
                 </View>
