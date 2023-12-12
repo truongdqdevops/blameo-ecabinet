@@ -3187,7 +3187,7 @@ class MeetingSchedule extends Component {
     //   attachmentId: idFileChuongTrinh = '',
     //   name: tenFileChuongTrinh = '',
     // } = fileNghiQuyet;
-    console.log('permissionpermission', permission.absentApprove, isChairman, typeGuests, status);
+    console.log('permissionpermission', permission);
 
     return (
       <View onLayout={this.onLayout} style={styles.container}>
@@ -3598,10 +3598,8 @@ class MeetingSchedule extends Component {
                                                                     </Table>
                                                                 </View>
                                                             </Modal> */}
-                            {(CONFERENCE_STATUS.DANG_HOP === status ||
-                              CONFERENCE_STATUS.DA_GUI === status) &&
-                              (isChairman || permission.absentApprove) &&
-                              typeGuests === 1 && (
+                            {[CONFERENCE_STATUS.DANG_HOP,CONFERENCE_STATUS.DA_GUI].includes(status) &&
+                              (isChairman || permission.absentApprove) && (
                                 <View
                                   style={[
                                     {
