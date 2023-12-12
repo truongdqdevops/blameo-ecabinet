@@ -102,7 +102,7 @@ class FeedbackResultDetail extends Component {
     let number = 0;
     for (const [key, value] of Object.entries(inputData)) {
       number += 1;
-      if (TYPE_LABEL[key] !== TYPE_LABEL.PHUONG_AN_KHAC) {
+      if (![TYPE_LABEL.Y_KIEN_KHAC].includes(TYPE_LABEL[key])) {
         data.push({
           key,
           amount: value.length,
@@ -163,7 +163,7 @@ class FeedbackResultDetail extends Component {
 
     for (const [key, value] of Object.entries(inputData)) {
       number += 1;
-      if (TYPE_LABEL[key] !== TYPE_LABEL.PHUONG_AN_KHAC) {
+      if (![TYPE_LABEL.Y_KIEN_KHAC].includes(TYPE_LABEL[key])) {
         data.push({
           key,
           amount: value.length,
@@ -173,10 +173,8 @@ class FeedbackResultDetail extends Component {
         });
       }
 
-      if (
-        TYPE_LABEL[key] !== TYPE_LABEL.CHUA_TRA_LOI &&
-        TYPE_LABEL[key] !== TYPE_LABEL.PHUONG_AN_KHAC
-      ) {
+      if (![TYPE_LABEL.Y_KIEN_KHAC].includes(TYPE_LABEL[key])) {
+        const isNotAnswer = TYPE_LABEL[key] === TYPE_LABEL.CHUA_TRA_LOI
         if (Number.isInteger(parseInt(key, 10))) {
           TYPE_LABEL[key] = `Phương án ${key}`;
         }
@@ -185,7 +183,7 @@ class FeedbackResultDetail extends Component {
             <View
               style={[
                 styles.colorItem,
-                {backgroundColor: Constants.COLOR_LIST[number - 1]},
+                {backgroundColor: isNotAnswer ? 'gray' : Constants.COLOR_LIST[number - 1]},
               ]}
             />
             <Text style={{fontSize: 15, fontWeight: 'bold'}}>
@@ -425,7 +423,7 @@ class FeedbackResultDetail extends Component {
         hideModalContentWhileAnimating
         style={{width, marginLeft: 0}}
       >
-        <View style={{backgroundColor: '#EBEFF5', height: height * 0.95}}>
+        <View style={{backgroundColor: '#EBEFF5', height: height * 0.9}}>
           <View
             style={{
               backgroundColor: '#326EC4',
