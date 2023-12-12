@@ -543,6 +543,15 @@ class MeetingSchedule extends Component {
     }
   };
 
+  handleCheckIsMember = (lstMemberAction = []) => {
+    const { id } = this.props.userInfo.appUser;
+    this.setState({
+      isMemberInvited: lstMemberAction?.some(
+        member => member.userId === id
+      )
+    });
+  };
+
   handleReloadAll = async bodyMeetingReq => {
     await Promise.all([
       this.props.getListMeeting(bodyMeetingReq),
@@ -596,12 +605,7 @@ class MeetingSchedule extends Component {
         !isCVVP && this.props.getConferenceParticipant(bodyReqConferenceId),
         this.props.getConferenceFile(bodyReqConferenceId)
       ]);
-      const isMember = await lstMemberAction.some(
-        member => member.userId === id
-      );
-      this.setState({
-        isMemberInvited: isMember
-      });
+      this.handleCheckIsMember(lstMemberAction || [])
 
       if (firstMeeting) {
         if (createdBy === id && (status === 6 || status === 1)) {
@@ -819,7 +823,9 @@ class MeetingSchedule extends Component {
         this.renderDataTableNote(conferenceId);
 
         await this.props.getConferenceFile({ conferenceId });
-        const { loaiGiayMoi, userId, strStartDate } = newSelectedMeeting;
+        const { loaiGiayMoi, userId, strStartDate, lstMemberAction } = newSelectedMeeting;
+        this.handleCheckIsMember(lstMemberAction || [])
+
         this.setState(
           {
             selectedMeeting: newSelectedMeeting,
@@ -1031,12 +1037,7 @@ class MeetingSchedule extends Component {
                 lstMember
               });
             }
-            const isMember = await lstMemberAction.some(
-              member => member.userId === id
-            );
-            this.setState({
-              isMemberInvited: isMember
-            });
+            this.handleCheckIsMember(lstMemberAction || [])
             if (createdBy === id && (status === 6 || status === 1)) {
               this.setState({
                 isShowingApproval: true,
@@ -2073,7 +2074,7 @@ class MeetingSchedule extends Component {
     });
   };
 
-  toggleModalActiveScreenNote = activeScreen => 
+  toggleModalActiveScreenNote = activeScreen =>
     this.setState({ activeNoteScreen: activeScreen });
 
   toggleReloadListNotebook = conferenceId => {
@@ -3186,6 +3187,7 @@ class MeetingSchedule extends Component {
     //   attachmentId: idFileChuongTrinh = '',
     //   name: tenFileChuongTrinh = '',
     // } = fileNghiQuyet;
+    console.log('permissionpermission', permission.absentApprove, isChairman, typeGuests, status);
 
     return (
       <View onLayout={this.onLayout} style={styles.container}>

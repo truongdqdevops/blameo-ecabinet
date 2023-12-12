@@ -2871,14 +2871,14 @@ class Feedbacks extends Component {
                           justifyContent: "space-between"
                         }}
                       >
-                        <View style={{ flexDirection: "row" }}>
-                          <View>
-                            <Text style={styles.boldTxt}>{"Số:"}</Text>
-                          </View>
-                          <View style={{ marginLeft: 5 }}>
-                            <Text style={styles.normalTxt}>{releasedCode}</Text>
-                          </View>
-                        </View>
+                        {/*<View style={{ flexDirection: "row" }}>*/}
+                        {/*  <View>*/}
+                        {/*    <Text style={styles.boldTxt}>{"Số:"}</Text>*/}
+                        {/*  </View>*/}
+                        {/*  <View style={{ marginLeft: 5 }}>*/}
+                        {/*    <Text style={styles.normalTxt}>{releasedCode}</Text>*/}
+                        {/*  </View>*/}
+                        {/*</View>*/}
                         <View style={{ flexDirection: "row" }}>
                           <View style={{}}>
                             <Text style={styles.boldTxt}>{"Ngày gửi:"}</Text>
