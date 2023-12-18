@@ -244,10 +244,12 @@ export default StyleSheet.create({
   },
   headerTable: {
     backgroundColor: "#d6e2f3",
+    minHeight: 40,
   },
   headerTableText: {
     textAlign: "center",
-    padding: 3,
+    textAlignVertical: 'center',
+    // paddingHorizontal: 3,
     fontWeight: "bold",
   },
   contentTable: {
