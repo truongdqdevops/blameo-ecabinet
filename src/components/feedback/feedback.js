@@ -286,19 +286,12 @@ class Feedbacks extends Component {
         } = this.props;
         const firstFeedback = listFeedback[0];
         const { status, parentStatus, parentResultId } = firstFeedback;
-        const { subjects = [], history = [] } = selectedFeedback;
-        const convertSelect = {
-          ...selectedFeedback,
-          ...firstFeedback,
-          subjects,
-          history
-        };
-        this.props.SelectedFeedback(convertSelect, -1);
+        this.props.SelectedFeedback(selectedFeedback, -1);
         this.setState(
           {
             listData: listFeedback,
             listFbResult: feedbackResult,
-            selectedFeedback: convertSelect,
+            selectedFeedback: selectedFeedback,
             isVisibleSendButton:
               permission.forward && status < 3 && parentStatus !== 4,
             isVisibleAnsButton:
