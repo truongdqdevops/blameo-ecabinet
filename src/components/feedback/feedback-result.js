@@ -346,7 +346,10 @@ class FeedbackResult extends Component {
     const { summary = [] } = inputData;
     summary.forEach(element => {
       if (element.subjectType === "YESNO") {
-        const { title = "", items = [], subjectId = 0, customs = [] } = element;
+        const { title = "", items = [], subjectId = 0 } = element;
+        const itemAnother = items.find(item => item.no === "ANOTHER");
+        const itemNo = items.find(item => item.no === "NO");
+        const itemYes = items.find(item => item.no === "YES");
         const itemData = [
           <Text
             style={{ textAlign: "left", color: "#3127F1" }}
@@ -360,9 +363,9 @@ class FeedbackResult extends Component {
           >
             {title}
           </Text>,
-          <Text style={styles.contentTableText}>{items[1].countItem}</Text>,
-          <Text style={styles.contentTableText}>{items[2].countItem}</Text>,
-          <Text style={styles.contentTableText}>{customs.length}</Text>
+          <Text style={styles.contentTableText}>{itemYes?.countItem ?? 0}</Text>,
+          <Text style={styles.contentTableText}>{itemNo?.countItem ?? 0}</Text>,
+          <Text style={styles.contentTableText}>{itemAnother?.countItem ?? 0}</Text>
         ];
         tableData2.push(itemData);
       }
